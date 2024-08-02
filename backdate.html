@@ -10,27 +10,78 @@
         <article>
             <section>
                 <div class="pw-post-title">
-                    <h1>Backdating your Medium posts!</h1>
+                    <h1>The Anti-pattern of Index as a key in React</h1>
                 </div>
                 <p class="pw-post-body-paragraph">
-                    This is a test HTML page that you can import to Medium as 
-                    a template to backdate your post.
+                    In React, keys are unique identifiers of each item in a list. This is important because  React tracks changes and updates the UI. Most likely, using the index of an item as its key is a common anti-pattern that can lead to unexpected behavior.
+                </p>
+                <div class="pw-post-title">
+                    <h3>The Problem in Using Index as a Key</h3>
+                </div>
+                <p class="pw-post-body-paragraph">
+                    <li>Duplication of keys among list items: The possibility of having two items assigned to one key is inevitable, and React renders incorrect updates to the UI due to this.</li>
+                    <li>Key stability: Initiate a stable key helps to maintain the items React interacts with while rendering, but when a key should change over time because the index of an item changes it sends a message to React to think it’s a new item and will re-render.</li>
                 </p>
                 <p class="pw-post-body-paragraph">
-                    You'll know when you've successfully backdated your post
-                    by looking at the bottom of your article when you import
-                    to Medium: it should say something like: "Originally 
-                    published at *** on [Whatever your date is]."
+                    Use Unique IDs: If each item in your list has a unique identifier (like an ID from a database), use that as the key. It encourages clear communication between the React components and renders accurate updates to the UI
+                    Let us try something by first defining a List
+
+                    //code sample
+                    const ItemList = () => {
+                        // Define a list of items, each with a unique id
+                        const items = [
+                          { id: 1, name: "Apple" },
+                          { id: 2, name: "Banana" },
+                          { id: 3, name: "Cherry" },
+                          { id: 4, name: "Date" },
+                        ];         
                 </p>
                 <p class="pw-post-body-paragraph">
-                    If you enjoyed this tutorial and method, please 
-                    drop me a follow on 
-                    <a href="https://liaogg.medium.com">Medium</a>
-                    and 
-                    <a href="https://github.com/kevinMEH">Github.</a>
+                    Next, we will show where we return each item in the list by their ID.
+                    //code sample
+                    return (
+                            <ul>
+                                {items.map((item) => (
+                                <li key={item.id}>{item.name}</li>
+                                ))}
+                            </ul>
+                        );
+                    };
                 </p>
                 <p class="pw-post-body-paragraph">
-                    Thanks, and bye!
+                    React will render the UI with an item list where each list item is mapped by its key ID. The best way to avoid using an index as a key is to use a unique identifier for each item in your list. This could be an ID from your database, a UUID, or a randomly generated string.
+                </p>
+                <div class="pw-post-title">
+                    <h3>Is there a right use case for Index as a Key?</h3>
+                </div>
+                <p class="pw-post-body-paragraph">
+                    There is one case where it's okay to use the index as a key: when you have a static list of items that will never change. In this case, the index is guaranteed to be unique and stable, so using it as the key is safe.<br>
+                    Create an array of items, each being a string representing a fruit, use the map function to iterate over the array, and create an element for each item.
+                    The key prop is set to the index of each item in the array.
+                    //code sample
+                    const ItemListWithIndexKey = () => {
+                        // Define a list of items
+                        const items = ['Apple', 'Banana', 'Cherry', 'Date'];
+                    //code sample end
+                    Here is a return function calling the items key index:
+                    //another code sample
+                    return (
+                        <ul>
+                          {items.map((item, index) => (
+                            <li key={index}>{item}</li>
+                          ))}
+                        </ul>
+                      );
+                    };
+                </p>
+                <p class="pw-post-body-paragraph">
+                    The Anti-pattern of the Key index: is when the state of your list items changes, React uses the keys to determine which items have changed, been added, or been removed. If you use the index as the key, changes in the list (like sorting, adding, or removing items) can cause unnecessary re-renders and degrade performance.
+                </p>
+                <div class="pw-post-title">
+                    <h3>Conclusion</h3>
+                </div>
+                <p>
+                    While using the index as a key might work in simple cases, it’s best practice to use a stable and unique key to avoid potential performance issues and bugs. This helps React efficiently update and render your components as expected.
                 </p>
             </section>
         </article>
